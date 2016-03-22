@@ -4,6 +4,8 @@
         <link rel="stylesheet" href="css/bootstrap.css" type="text/css" media="screen">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
         <script src="js/bootstrap.js"></script>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.1.0/math.js"></script>
         <title></title>
     </head>
     <body>
@@ -26,7 +28,8 @@
                         <!-- stagger and offset are controlled her -->
                         <div class="col-md-12">
                             <p>
-                                First Sentence
+                                Analyze every <input style = "width:3em" id = "inputStagger" type = "number" value = "1" />th letter <br>
+                                Start at: <input style = "width:3em" id = "inputShift" type = "number" value = "0" />
                             </p>
                         </div>
                     </div>
@@ -81,5 +84,6 @@
                 </div>
             </div>
         </div>
+        <script src="js/staggered-frequency-count2.js"></script>
     </body>
 </html>
