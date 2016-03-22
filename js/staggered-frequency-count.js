@@ -157,6 +157,8 @@ var initializeChart = function(userInput,chartDivID) {
 };
 var updateChartStaggerOffsetText = function(userInput,chartDivID) {
     var chartDiv = document.getElementById(chartDivID);
+    userInput.rotated = 0;
+    chartDiv.data[1].name = chartDiv.data[1].nameTemplate.replace("%data%",userInput.rotated);
     var trace = chartDiv.data[1];
     var staggeredFrequencies = userInput.message.getStaggeredFrequencies(userInput.stagger);
     trace.y =  staggeredFrequencies[userInput.offset];
