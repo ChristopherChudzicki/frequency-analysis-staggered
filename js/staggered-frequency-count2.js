@@ -61,10 +61,10 @@ Message.prototype.getStaggeredFrequencies = function(stagger){
         return math.multiply(counts,1/math.sum(counts));
     };
     
-    for (var shift = 0; shift < stagger; shift++){
+    for (var offset = 0; offset < stagger; offset++){
         //Get relevant characters
         var relevantCharacters = "";
-        for (var j = shift; j < this.cleanText.length; j += stagger){
+        for (var j = offset; j < this.cleanText.length; j += stagger){
             relevantCharacters += this.cleanText[j];
         }
         //Count frequencies
@@ -73,15 +73,57 @@ Message.prototype.getStaggeredFrequencies = function(stagger){
     return staggeredFrequencies;
 };
 
-var chartInitialize = function(chartDiv) {
-    var initialData = [
-        {
+var setDefaults = function() {
+    var stagger = 4;
+    var offset = 0;
+    var defaults = {
+        message: new Message(defaultTexts.sherlockVigenere), //Message object storing text
+        stagger:stagger, //every "stagger"th character in message is analyzed ...
+        offset:offset, //starting at character number "offset"
+        rotated:0, //how much has frequency chart been rotated so far?
+    }
+    document.getElementById('inputStagger').setAttribute("value",stagger)
+    document.getElementById('inputOffset').setAttribute("value",offset)
+    return defaults
+};
+var updateDisplayText = function(userInput) {
+    var highlightEveryNth = function(string,N,offset){
+        var offset = offset % N;
+        var newString = "";
+        for (var i = 0; i < string.length; i++){
+            if (i % N === offset){
+                newString += "<mark class='char-included'>" + string[i] + "</mark>";
+            } else {
+                newString += "<mark class='char-excluded'>" + string[i] + "</mark>";
+            }
+        }
+        return newString;
+    };
+    var highlightedText = highlightEveryNth(userInput.message.cleanText,userInput.stagger,userInput.offset);
+    document.getElementById('displayText').innerHTML = highlightedText;
+};
+var initializeChart = function(userInput,chartDivID) {
+    var englishTrace = {
             x: englishLetters,
             y: englishFrequencies,
             type: "bar",
             name: "Standard <br> English"
-        }
-    ];
+    };
+    var userTrace = {
+        x:englishLetters, 
+        y: userInput.message.getStaggeredFrequencies(userInput.stagger)[userInput.offset],
+        type: "scatter",
+        mode: "lines+markers",
+        marker: {
+            size:6
+        },
+        line: {
+            width: 3
+        },
+        nameTemplate: "Input Text <br> (Shift: <b>%data%</b>)",
+    };
+    userTrace.name = userTrace.nameTemplate.replace("%data%","0");
+    var data = [englishTrace,userTrace];
     var layout = {
         autosize:false,
         width:640,
@@ -93,74 +135,80 @@ var chartInitialize = function(chartDiv) {
             fixedrange:true
         },
         showlegend:true,
-        title: "Letter Frequencies"
+        title: "Letter Frequencies",
+        margin:{
+            l:50,
+            r:50,
+            t:75,
+            b:75
+        },
+        font: {
+            size:14
+        },
+        legend: {
+            x: 0.8,
+            y: 1,
+        }
     };
     var config = {
         displayModeBar: false
     };
-    return Plotly.newPlot(chartDiv, initialData, layout, config);
+    return Plotly.newPlot(chartDivID, data, layout, config);
 };
-var onSubmit = function(chartDiv){
-    var getUserData = function(){
-        var userData = {};
-        userData.message = document.getElementById('inputText').value;
-        userData.message = new Message(userData.message);
-        userData.stagger = Number(document.getElementById('inputStagger').value);
-        userData.shift = Number(document.getElementById('inputShift').value);
-        userData.shift = userData.shift % userData.stagger;
-        return userData;
-    };
-    var addTrace = function(userData){
-        var yValues = userData.message.getStaggeredFrequencies(userData.stagger)[userData.shift];
-        var trace = {
-            x:englishLetters, 
-            y: yValues,
-            type: "scatter",
-            mode: "lines+markers",
-            marker: {
-                size:6
-            },
-            line: {
-                width: 3
-            },
-            nameTemplate: "Input Text <br> (Shift: %data%)",
-            rotated: 0
-        };
-        trace.name = trace.nameTemplate.replace("%data%","0");
-        //Remove old user-trace if it's already been drawn:
-        if (chartDiv.data.length > 1){
-            Plotly.deleteTraces(chartDiv,1);
-        }
-        Plotly.addTraces(chartDiv, trace);
-    };
-    var userData = getUserData();
-    addTrace(userData);
+var updateChartStaggerOffsetText = function(userInput,chartDivID) {
+    var chartDiv = document.getElementById(chartDivID);
+    var trace = chartDiv.data[1];
+    var staggeredFrequencies = userInput.message.getStaggeredFrequencies(userInput.stagger);
+    trace.y =  staggeredFrequencies[userInput.offset];
+    Plotly.redraw(chartDiv);
 };
-var shiftTrace = function(chartDiv,traceNum,shift){
-    var trace = chartDiv.data[traceNum];
-    trace.y.rotateRight(shift);
-    trace.rotated = (trace.rotated + shift) % trace.y.length;
-    chartDiv.data[traceNum].name = chartDiv.data[traceNum].nameTemplate.replace("%data%",trace.rotated);
+var rotateTraceRight = function(userInput,chartDivID,value){
+    var chartDiv = document.getElementById(chartDivID);
+    var trace = chartDiv.data[1]; //get 1st trace
+    trace.y.rotateRight(value);
+    userInput.rotated = (userInput.rotated + value) % trace.y.length;
+    chartDiv.data[1].name = chartDiv.data[1].nameTemplate.replace("%data%",userInput.rotated);
     Plotly.redraw(chartDiv);
 };
 
-// Set Default Text
-document.getElementById('inputText').innerHTML = defaultTexts.sherlockVigenere;
-// Set default chart
+
+// Set default state
 var chartDivID = "chartHolder";
-chartInitialize(chartDivID);
-var chartDiv = document.getElementById(chartDivID);
-// Enable "submit" button
-document.getElementById('inputSubmit').onclick = function(){
-    onSubmit(chartDiv);
-};
-// Enable Left/Right Button
-document.getElementById('shiftLeft').onclick = function(){
-    shiftTrace(chartDiv,1,-1);
-};
-document.getElementById('shiftRight').onclick = function(){
-    shiftTrace(chartDiv,1,+1);
-};
+var userInput = setDefaults();
+updateDisplayText(userInput);
+initializeChart(userInput,chartDivID);
+
+// on update stagger
+$("#inputStagger").on("input propertychange paste", function(event) {
+    if (this.value !== ""){
+        userInput.stagger = Number(this.value);
+        updateChartStaggerOffsetText(userInput,chartDivID);
+        updateDisplayText(userInput);
+    }
+});
+// on update offset
+$("#inputOffset").on("input propertychange paste", function(event) {
+    if (this.value !== ""){
+        userInput.offset = Number(this.value) % userInput.stagger;
+        updateChartStaggerOffsetText(userInput,chartDivID);
+        updateDisplayText(userInput);
+    }
+});
+
+// on left/right arrows
+$("#rotateLeft").on("click", function() {
+    rotateTraceRight(userInput,chartDivID,-1);
+});
+$("#rotateRight").on("click", function() {
+    rotateTraceRight(userInput,chartDivID,+1);
+});
+
+// on submit new text
+$("#submitText").on("click", function(){
+    userInput.message = new Message($("#inputText").val());
+    updateChartStaggerOffsetText(userInput,chartDivID);
+    updateDisplayText(userInput);
+});
 
 
 

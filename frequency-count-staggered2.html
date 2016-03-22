@@ -1,26 +1,26 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html>
     <head>
-        <link rel="stylesheet" href="css/bootstrap.css" type="text/css" media="screen">
+        <link rel="stylesheet" href="css/bootstrap-flatly.css" type="text/css" media="screen">
+        <link rel="stylesheet" href="css/custom.css" type="text/css" media="screen">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
         <script src="js/bootstrap.js"></script>
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.1.0/math.js"></script>
-        <title></title>
+        <title>Staggered Frequency Analysis</title>
     </head>
     <body>
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
                     <h1 class="text-center">
-                        Title
+                        Staggered Frequency Analysis
                     </h1>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-8">
                     <div id="chartHolder">
-                        <img src="http://placehold.it/640x400">
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -28,16 +28,15 @@
                         <!-- stagger and offset are controlled her -->
                         <div class="col-md-12">
                             <p>
-                                Analyze every <input style = "width:3em" id = "inputStagger" type = "number" value = "1" />th letter <br>
-                                Start at: <input style = "width:3em" id = "inputShift" type = "number" value = "0" />
+                                Analyze every <input style = "width:2em" id = "inputStagger" type = "number" value = "1" /><sup>th</sup> letter <br>
+                                Start at: <input style = "width:2em" id = "inputOffset" type = "number" value = "0" />
                             </p>
                         </div>
                     </div>
                     <div class="row">
                         <!-- inputText is displayed here -->
-                        <div class="col-md-12" style="height:350px;overflow-y:scroll;font-family:monospace">
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,
+                        <div class="col-md-12 crypto-text-holder" style="height:350px">
+                            <p id="displayText">
                             </p>
                         </div>
                     </div>
@@ -46,10 +45,10 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="text-center">
-                        <button type="button" class="btn btn-default">
+                        <button id="rotateLeft" type="button" class="btn btn-default">
                             <span class="glyphicon glyphicon-menu-left"></span>
                         </button>
-                        <button type="button" class="btn btn-default">
+                        <button id="rotateRight" type="button" class="btn btn-default">
                             <span class="glyphicon glyphicon-menu-right"></span>
                         </button>
                     </div>
@@ -57,7 +56,7 @@
                 <div class="col-md-4">
                     <!-- Trigger the modal with a button -->
                     <div class="text-center">
-                        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
+                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">Edit Text</button>
                     </div> 
                     <!-- Modal -->
                     <div id="myModal" class="modal fade" role="dialog">
@@ -67,16 +66,19 @@
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">X</button>
                                     <h4 class="modal-title">
-                                        Modal Header
+                                        Enter Text
                                     </h4>
                                 </div>
                                 <div class="modal-body">
                                     <p>
-                                       Enter your text here. Case and non-alphabetic characters will be ignored.
+                                        Non-alphabetic characters will be ignored, as will letter case.s
                                     </p>
+                                    <div class="text-center">
+                                        <textarea id="inputText"></textarea>
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button id="submitText" type="button" class="btn btn-default" data-dismiss="modal">Submit</button>
                                 </div>
                             </div>
                         </div>

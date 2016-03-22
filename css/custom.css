@@ -1,0 +1,20 @@
+.crypto-text-holder {
+    overflow-y:scroll;
+    font-family:monospace;
+    word-wrap:break-word;
+    max-height:250px;
+}
+
+.char-included {
+    background-color: rgb(255, 240, 230);
+}
+.char-excluded {
+    background-color: rgb(255, 255, 255);
+}
+
+#inputText {
+    width:75%;
+    max-width:75%;
+    height:300px;
+    max-height:150px;
+}
