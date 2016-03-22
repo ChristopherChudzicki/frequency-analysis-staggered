@@ -139,8 +139,8 @@ var initializeChart = function(userInput,chartDivID) {
         margin:{
             l:50,
             r:50,
-            t:75,
-            b:75
+            t:50,
+            b:50
         },
         font: {
             size:14
