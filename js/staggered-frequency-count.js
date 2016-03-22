@@ -139,8 +139,8 @@ var initializeChart = function(userInput,chartDivID) {
         margin:{
             l:50,
             r:50,
-            t:75,
-            b:75
+            t:50,
+            b:50
         },
         font: {
             size:14
@@ -204,6 +204,22 @@ $("#rotateLeft").on("click", function() {
 $("#rotateRight").on("click", function() {
     rotateTraceRight(userInput,chartDivID,+1);
 });
+// on left/right keystroke
+$("#"+chartDivID).keydown(function(event) {
+    switch(event.which) {
+        case 37: // left
+            rotateTraceRight(userInput,chartDivID,-1);
+        break;
+
+        case 39: // right
+            rotateTraceRight(userInput,chartDivID,+1);
+        break;
+
+        default: return; // exit this handler for other keys
+    }
+    event.preventDefault(); // prevent the default action (scroll / move caret)
+});
+
 
 // on submit new text
 $("#submitText").on("click", function(){
