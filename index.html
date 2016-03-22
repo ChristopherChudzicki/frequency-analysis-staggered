@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+    <head>
+        <link rel="stylesheet" href="css/bootstrap-flatly.css" type="text/css" media="screen">
+        <link rel="stylesheet" href="css/custom.css" type="text/css" media="screen">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+        <script src="js/bootstrap.js"></script>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.1.0/math.js"></script>
+        <title>Staggered Frequency Analysis</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-xs-12">
+                    <h1 class="text-center">
+                        Staggered Frequency Analysis
+                    </h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8 col-xs-12">
+                    <div id="chartHolder">
+                    </div>
+                    <div class="text-center">
+                        <button id="rotateLeft" type="button" class="btn btn-default">
+                            <span class="glyphicon glyphicon-menu-left"></span>
+                        </button>
+                        <button id="rotateRight" type="button" class="btn btn-default">
+                            <span class="glyphicon glyphicon-menu-right"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-4 col-xs-8">
+                    <div class="row">
+                        <!-- stagger and offset are controlled her -->
+                        <div class="col-md-12">
+                            <p>
+                                Analyze every <input style = "width:2em" id = "inputStagger" type = "number" value = "1" /><sup>th</sup> letter <br>
+                                Start at: <input style = "width:2em" id = "inputOffset" type = "number" value = "0" />
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- inputText is displayed here -->
+                        <div class="col-md-12 crypto-text-holder" style="height:350px">
+                            <p id="displayText">
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- Trigger the modal with a button -->
+                            <div class="text-center">
+                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">Edit Text</button>
+                            </div> 
+                            <!-- Modal -->
+                            <div id="myModal" class="modal fade" role="dialog">
+                                <div class="modal-dialog">
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">X</button>
+                                            <h4 class="modal-title">
+                                                Enter Text
+                                            </h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>
+                                                Non-alphabetic characters will be ignored, as will letter case.s
+                                            </p>
+                                            <div class="text-center">
+                                                <textarea id="inputText"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button id="submitText" type="button" class="btn btn-default" data-dismiss="modal">Submit</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="js/staggered-frequency-count.js"></script>
+    </body>
+</html>
