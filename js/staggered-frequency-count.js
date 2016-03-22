@@ -156,6 +156,7 @@ var initializeChart = function(userInput,chartDivID) {
     return Plotly.newPlot(chartDivID, data, layout, config);
 };
 var updateChartStaggerOffsetText = function(userInput,chartDivID) {
+    userInput.rotated = 0;
     var chartDiv = document.getElementById(chartDivID);
     var trace = chartDiv.data[1];
     var staggeredFrequencies = userInput.message.getStaggeredFrequencies(userInput.stagger);
